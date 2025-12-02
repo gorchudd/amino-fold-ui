@@ -39,7 +39,7 @@ function App() {
     }
 
     if (event.key === 'Enter') {
-      setPage((prev == 0) ? 1 : 0);
+      setPage((prev === 0) ? 1 : 0);
     }
   }, []);
 
