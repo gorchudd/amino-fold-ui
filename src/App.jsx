@@ -162,7 +162,7 @@ function OutputPage({ sequence, pdb, onPredict }) {
         {pdb ? (
           <ProteinViewer pdbString={pdb} />
         ) : (
-          <div>Waiting for prediction…</div>
+          <div className='container-center-fill'>Waiting for prediction…</div>
         )}
       </div>
     </div>
