@@ -47,6 +47,10 @@ function App() {
     };
   }, [handleKeyDown]);
 
+  useEffect(() => {
+    setPdb(null);
+  }, [sequence]);
+
   function handleAminoClick(aminoName) {
     setPdb(null); // force fresh prediction next time we go to output
     setSequence(prev => appendAminoAcid(prev, aminoName));
