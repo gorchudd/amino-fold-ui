@@ -1,6 +1,6 @@
 import './App.css';
 import { AMINO_ACIDS } from './constants/aminoAcids';
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { userRef, useState, useMemo, useEffect, useCallback } from 'react';
 
 export function appendAminoAcid(sequence, aminoFullName) {
   const amino = AMINO_ACIDS.get(aminoFullName);
@@ -22,6 +22,10 @@ function App() {
   const handleKeyDown = useCallback((event) => {
     if (event.key === 'Backspace') {
       setSequence(prev => removeAminoAcid(prev));
+    }
+
+    if (event.key === 'Enter') {
+      setPage(1);
     }
   }, []);
 
