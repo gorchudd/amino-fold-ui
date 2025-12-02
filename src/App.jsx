@@ -52,16 +52,14 @@ function InputPage({sequence, onAminoClick}) {
         onClick={() => onAminoClick(aminoName)}
         className='amino-acid-button'
       >
-        <div className='centered-text'>
-          {aminoName}
-        </div>
+        {aminoName}
       </button>
     ));
   }, [onAminoClick]);
 
   return (
     <div className='full-page' id='top-down-page'>
-      <div className='centered-text container-center-fill' id='top'>
+      <div className='container-center-fill' id='top'>
         {readAminoSequence(sequence)}
       </div>
       <div className='container-center-fill' id='down'>

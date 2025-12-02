@@ -21,6 +21,7 @@ html, body {
 
 #top-down-page #top {
   flex: 1 1 auto;
+  display: flex;
   flex-wrap: wrap;
   font-size: 25px;
   overflow-y: auto;
@@ -36,7 +37,8 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  column-gap: 10px;
+  row-gap: 2px;
 }
 
 .amino-acid-button {
@@ -45,10 +47,4 @@ html, body {
   width: 150px;
   font-size: 20px;
   text-transform: capitalize;
-}
-
-.centered-text {
-  display: flex;
-  justify-content: center;
-  text-align: center;
 }
