@@ -53,7 +53,7 @@ function App() {
   // vibed
   const API_BASE = import.meta.env.DEV
     ? 'http://localhost:8000'                         // local dev
-    : 'https://amino-fold-backend.onrender.com';      // Render URL (replace with yours)
+    : 'https://protein-backend-lner.onrender.com';      // Render URL (replace with yours)
 
   async function handlePredict() {
     const seqOneLetter = sequenceToOneLetter(sequence);
