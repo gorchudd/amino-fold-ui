@@ -25,5 +25,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 10px;
+}
+
+.amino-acid-button {
+  height: 60px;
+  min-width: fit-content;
+  width: 150px;
 }
