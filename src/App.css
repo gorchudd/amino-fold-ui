@@ -31,9 +31,9 @@ html, body, #root{
 }
 
 #top-down-page #sequence {
+  min-width: 0;
   width: 100%;
   max-width: 100%;
-  flex: 0 0 auto;
   display: block;
   overflow-wrap: anywhere;
   font-size: 25px;
@@ -51,11 +51,11 @@ html, body, #root{
 
 #top-down-page #view {
   display: flex;
-  flex: 1 1 auto;
   height: 75%;
   min-height: 0;
   border: 2px solid red;
-  flex-shrink: 0;
+  width: 100%;
+  min-width: 0;
 }
 
 .container-center-fill {
