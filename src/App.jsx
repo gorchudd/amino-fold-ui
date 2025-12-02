@@ -1,6 +1,6 @@
 import './App.css';
 import { AMINO_ACIDS } from './constants/aminoAcids';
-import { userRef, useState, useMemo, useEffect, useCallback } from 'react';
+import { useRef, useState, useMemo, useEffect, useCallback } from 'react';
 // test
 const TEST_PDB = `
 ATOM      1  N   GLY A   1      11.104  13.207  10.217  1.00 20.00           N  
