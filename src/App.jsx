@@ -127,7 +127,7 @@ function InputPage({sequence, onAminoClick}) {
 function OutputPage({sequence}) {
   return (
     <div className='full-page' id='top-down-page'>
-      <div className='container-center-fill' id='top'>
+      <div className='container-center-fill' id='sequence'>
         {readAminoSequence(sequence)}
       </div>
       <div className='container-center-fill' id='view'>
