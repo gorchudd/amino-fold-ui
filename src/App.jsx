@@ -61,7 +61,7 @@ function InputPage({sequence, onAminoClick}) {
 
   return (
     <div className='full-page' id='top-down-page'>
-      <div className='container-center-fill centered-text' id='top'>
+      <div className='centered-text container-center-fill' id='top'>
         {readAminoSequence(sequence)}
       </div>
       <div className='container-center-fill' id='down'>
