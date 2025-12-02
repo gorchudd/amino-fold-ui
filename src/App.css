@@ -13,6 +13,7 @@
   height: 30%;
   width: 1;
   flex-wrap: wrap;
+  font-size: 25px;
 }
 
 #top-down-page #down {
@@ -36,7 +37,9 @@
   text-transform: capitalize;
 }
 
-.amino-acid-button div {
+.centered-text {
+  width: 100%;
+  height: 100%;
   justify-content: center;
   text-align: center;
 }
