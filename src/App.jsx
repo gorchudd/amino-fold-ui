@@ -48,6 +48,8 @@ function App() {
 
   // vibed
   async function handlePredict() {
+    if (pdb) return;
+    
     const seqOneLetter = sequenceToOneLetter(sequence);
     if (!seqOneLetter) return;
 
@@ -146,7 +148,7 @@ function InputPage({sequence, onAminoClick}) {
   );
 }
 
-function OutputPage({sequence}) {
+function OutputPage({ sequence, pdb, onPredict }) {
   useEffect(() => {
     onPredict();
   }, [onPredict]);
