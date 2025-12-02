@@ -1,35 +1,80 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import { AMINO_ACIDS } from './constants/aminoAcids';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+
+export function appendAminoAcid(sequence, aminoFullName) {
+  const amino = AMINO_ACIDS.get(aminoFullName);
+  return [...sequence, amino];
+}
+
+export function removeAminoAcid(sequence) {
+  return sequence.slice(0, sequence.length - 1);
+}
+
+export function readAminoSequence(sequence) {
+  return sequence.join('-');
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [page, setPage] = useState(0);
+  const [sequence, setSequence] = useState([]);
+
+  const handleKeyDown = useCallback((event) => {
+    if (event.key === 'Backspace') {
+      setSequence(prev => removeAminoAcid(prev));
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown])
+
+  function handleAminoClick(aminoName) {
+    setSequence(prev => appendAminoAcid(prev, aminoName));
+  }
+
+  if (page === 0) {
+    return <InputPage sequence = {sequence} onAminoClick={handleAminoClick}/>;
+  }
+  
+  return <OutputPage sequence={sequence}/>;
+}
+
+function InputPage({sequence, onAminoClick}) {
+  const aminoAcidsButtons = useMemo(() => {
+    return Array.from(AMINO_ACIDS.keys()).map(aminoName => (
+      <button
+        key={aminoName}
+        onClick={() => onAminoClick(aminoName)}
+        className='amino-acid-button'
+      >
+        {aminoName}
+      </button>
+    ));
+  }, [onAminoClick]);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className='full-page' id='top-down-page'>
+      <div className='container-center-fill' id='top'>
+        {readAminoSequence(sequence)}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className='container-center-fill' id='down'>
+        {aminoAcidsButtons}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    </div>
+  );
+}
+
+function OutputPage({sequence}) {
+  return (
+    <div className='full-page'>
+      
+    </div>
+  );
 }
 
 export default App
