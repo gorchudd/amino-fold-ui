@@ -54,7 +54,7 @@ function App() {
     if (!seqOneLetter) return;
 
     try {
-      const res = await fetch('http://localhost:8000/predict', {
+      const res = await fetch('/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sequence: seqOneLetter }),
