@@ -49,7 +49,7 @@ function App() {
   // vibed
   async function handlePredict() {
     if (pdb) return;
-    
+
     const seqOneLetter = sequenceToOneLetter(sequence);
     if (!seqOneLetter) return;
 
@@ -71,6 +71,7 @@ function App() {
       console.error('Error calling backend', err);
     }
   }
+
 
 
   if (page === 0) {
