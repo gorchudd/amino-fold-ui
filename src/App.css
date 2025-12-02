@@ -34,7 +34,6 @@ html, body, #root{
   width: 100%;
   max-width: 100%;
   flex: 0 0 auto;
-  flex-shrink: 0;
   display: block;
   overflow-wrap: anywhere;
   font-size: 25px;
@@ -56,6 +55,7 @@ html, body, #root{
   height: 75%;
   min-height: 0;
   border: 2px solid red;
+  flex-shrink: 0;
 }
 
 .container-center-fill {
