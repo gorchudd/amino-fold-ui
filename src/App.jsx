@@ -102,13 +102,19 @@ function ProteinViewer({ pdbString }) {
     element.innerHTML = '';
 
     const viewer = window.$3Dmol.createViewer(element, {
-      backgroundColor: 'black', // change to black so you SEE the cartoon
+      backgroundColor: 'black',
     });
 
+    // 🔹 Use sticks as a guaranteed-visible fallback
     viewer.addModel(pdbString, 'pdb');
-    viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
+    viewer.setStyle({}, {
+      cartoon: { color: 'spectrum' },
+      stick: { radius: 0.2 }, // this will show even tiny fragments
+    });
+
     viewer.zoomTo();
     viewer.render();
+    viewer.zoom(1.1, 500);
   }, [pdbString]);
 
   return (
@@ -124,6 +130,7 @@ function ProteinViewer({ pdbString }) {
     />
   );
 }
+
 
 
 // ====== pages ======
