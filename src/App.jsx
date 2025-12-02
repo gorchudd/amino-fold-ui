@@ -1,20 +1,6 @@
 import './App.css';
 import { AMINO_ACIDS } from './constants/aminoAcids';
 import { useRef, useState, useMemo, useEffect, useCallback } from 'react';
-// test
-const TEST_PDB = `
-ATOM      1  N   GLY A   1      11.104  13.207  10.217  1.00 20.00           N  
-ATOM      2  CA  GLY A   1      12.560  13.300  10.091  1.00 20.00           C  
-ATOM      3  C   GLY A   1      13.057  14.679   9.658  1.00 20.00           C  
-ATOM      4  O   GLY A   1      12.353  15.651   9.873  1.00 20.00           O  
-ATOM      5  N   ALA A   2      14.262  14.770   9.036  1.00 20.00           N  
-ATOM      6  CA  ALA A   2      14.864  16.053   8.628  1.00 20.00           C  
-ATOM      7  C   ALA A   2      14.107  16.613   7.408  1.00 20.00           C  
-ATOM      8  O   ALA A   2      13.460  15.892   6.648  1.00 20.00           O  
-TER
-END
-`;
-
 
 export function appendAminoAcid(sequence, aminoFullName) {
   const amino = AMINO_ACIDS.get(aminoFullName);
@@ -26,12 +12,17 @@ export function removeAminoAcid(sequence) {
 }
 
 export function readAminoSequence(sequence) {
-  return sequence.join('-');
+  return sequence.map(amino => amino.three).join('-');
+}
+
+export function sequenceToOneLetter(sequence) {
+  return sequence.map(amino => amino.one).join('');
 }
 
 function App() {
   const [page, setPage] = useState(0);
   const [sequence, setSequence] = useState([]);
+  const [pdb, setPdb] = useState(null);
 
   const handleKeyDown = useCallback((event) => {
     if (event.key === 'Backspace') {
@@ -55,11 +46,40 @@ function App() {
     setSequence(prev => appendAminoAcid(prev, aminoName));
   }
 
+  // vibed
+  async function handlePredict() {
+    const seqOneLetter = sequenceToOneLetter(sequence);
+    if (!seqOneLetter) return;
+
+    try {
+      const res = await fetch('http://localhost:8000/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sequence: seqOneLetter }),
+      });
+
+      if (!res.ok) {
+        console.error('Predict failed', res.status);
+        return;
+      }
+
+      const data = await res.json();
+      setPdb(data.pdb);
+    } catch (err) {
+      console.error('Error calling backend', err);
+    }
+  }
+
+
   if (page === 0) {
     return <InputPage sequence = {sequence} onAminoClick={handleAminoClick}/>;
   }
   
-  return <OutputPage sequence={sequence}/>;
+  return <OutputPage
+    sequence={sequence}
+    pdb={pdb}
+    onPredict={handlePredict}
+  />;
 }
 
 // vibed
@@ -127,13 +147,21 @@ function InputPage({sequence, onAminoClick}) {
 }
 
 function OutputPage({sequence}) {
+  useEffect(() => {
+    onPredict();
+  }, [onPredict]);
+
   return (
     <div className='full-page' id='top-down-page'>
       <div className='container-center-fill' id='sequence'>
         {readAminoSequence(sequence)}
       </div>
       <div className='container-center-fill' id='view'>
-        <ProteinViewer pdbString={TEST_PDB} />
+        {pdb ? (
+          <ProteinViewer pdbString={pdb} />
+        ) : (
+          <div>Waiting for prediction…</div>
+        )}
       </div>
     </div>
   );
