@@ -51,14 +51,19 @@ function App() {
   }
 
   // vibed
-  async function handlePredict() {
-    if (pdb) return;
+  const API_BASE = import.meta.env.DEV
+    ? 'http://localhost:8000'                         // local dev
+    : 'https://amino-fold-backend.onrender.com';      // Render URL (replace with yours)
 
+  async function handlePredict() {
     const seqOneLetter = sequenceToOneLetter(sequence);
-    if (!seqOneLetter) return;
+    if (!seqOneLetter) {
+      setPdb(null);
+      return;
+    }
 
     try {
-      const res = await fetch('http://localhost:8000/predict', {
+      const res = await fetch(`${API_BASE}/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ sequence: seqOneLetter }),
@@ -75,6 +80,7 @@ function App() {
       console.error('Error calling backend', err);
     }
   }
+
 
 
 
