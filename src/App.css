@@ -1,3 +1,9 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
 #root {
   height: 100%
 }
@@ -23,16 +29,14 @@
   flex-wrap: wrap;
   font-size: 25px;
   overflow-y: auto;
-  border-width: 2px;
-  border-color: red;
+  border: 1px solid red;
 }
 
 #top-down-page #down {
   flex: 0 0 auto;
   flex-shrink: 0;
   flex-wrap: wrap;
-  border-width: 2px;
-  border-color:aliceblue;
+  border: 2px solid aliceblue;
 }
 
 .container-center-fill {
