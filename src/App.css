@@ -1,15 +1,32 @@
 .full-page {
+  height: 100%;
+  width: 100%;
+}
+
+#top-down-page {
   display: flex;
   flex-direction: column;
 }
 
-.full-page.top {
+#top-down-page #top {
   min-height: 200px;
   height: 30%;
   width: 1;
+  flex-wrap: wrap;
 }
 
-.full-page.bottom {
+#top-down-page #down {
   height: 1;
   width: 1;
+  flex-wrap: wrap;
+}
+
+.container-center-fill {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#amino-acid-button {
+  
 }
