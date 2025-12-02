@@ -40,7 +40,11 @@ function App() {
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown])
+  }, [handleKeyDown]);
+
+  useEffect(() => {
+    setPdb(null);
+  }, [sequence]);
 
   function handleAminoClick(aminoName) {
     setSequence(prev => appendAminoAcid(prev, aminoName));
