@@ -9,7 +9,7 @@
 }
 
 #top-down-page #top {
-  min-height: 200px;
+  min-height: 50px;
   height: 30%;
   width: 1;
   flex-wrap: wrap;
@@ -25,4 +25,5 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 20px;
 }
