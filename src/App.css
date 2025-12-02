@@ -32,6 +32,11 @@
   height: 60px;
   min-width: fit-content;
   width: 150px;
-  font-size: 30px;
+  font-size: 20px;
   text-transform: capitalize;
+}
+
+.amino-acid-button div {
+  justify-content: center;
+  text-align: center;
 }
