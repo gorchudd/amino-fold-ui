@@ -2,25 +2,30 @@ import './App.css';
 import { AMINO_ACIDS } from './constants/aminoAcids';
 import { useRef, useState, useMemo, useEffect, useCallback } from 'react';
 
+// ====== sequence helpers ======
+
 export function appendAminoAcid(sequence, aminoFullName) {
-  const amino = AMINO_ACIDS.get(aminoFullName);
+  const amino = AMINO_ACIDS.get(aminoFullName); // { one, three }
   return [...sequence, amino];
 }
 
 export function removeAminoAcid(sequence) {
+  if (sequence.length === 0) return sequence;
   return sequence.slice(0, sequence.length - 1);
 }
 
 export function readAminoSequence(sequence) {
-  return sequence.map(amino => amino.three).join('-');
+  return sequence.map(amino => amino?.three ?? '?').join('-');
 }
 
 export function sequenceToOneLetter(sequence) {
-  return sequence.map(amino => amino.one).join('');
+  return sequence.map(amino => amino?.one ?? '?').join('');
 }
 
+// ====== main app ======
+
 function App() {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(0);      // 0 = input, 1 = output
   const [sequence, setSequence] = useState([]);
   const [pdb, setPdb] = useState(null);
 
@@ -30,71 +35,64 @@ function App() {
     }
 
     if (event.key === 'Enter') {
+      setPdb(null);           // reset prediction when switching pages
       setPage(prev => (prev === 0 ? 1 : 0));
     }
   }, []);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
-
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [handleKeyDown])
+  }, [handleKeyDown]);
 
   function handleAminoClick(aminoName) {
+    setPdb(null); // force fresh prediction next time we go to output
     setSequence(prev => appendAminoAcid(prev, aminoName));
   }
 
-  // vibed
+  // 🔹 For now, stub: we can plug backend here later
   async function handlePredict() {
-    if (pdb) return;
-    
-    const seqOneLetter = sequenceToOneLetter(sequence);
-    if (!seqOneLetter) return;
-
-    try {
-      const res = await fetch('http://localhost:8000/predict', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sequence: seqOneLetter }),
-      });
-
-      if (!res.ok) {
-        console.error('Predict failed', res.status);
-        return;
-      }
-
-      const data = await res.json();
-      setPdb(data.pdb);
-    } catch (err) {
-      console.error('Error calling backend', err);
-    }
+    console.log('handlePredict called');
+    // VERY TEMP: just set a tiny fake PDB so we can see the viewer.
+    // Once this works visually, we swap this for the real fetch.
+    setPdb(
+`ATOM      1  N   GLY A   1      11.104  13.207  10.217  1.00 20.00           N  
+ATOM      2  CA  GLY A   1      12.560  13.300  10.091  1.00 20.00           C  
+END`
+    );
   }
-
 
   if (page === 0) {
-    return <InputPage sequence = {sequence} onAminoClick={handleAminoClick}/>;
+    return (
+      <InputPage
+        sequence={sequence}
+        onAminoClick={handleAminoClick}
+      />
+    );
   }
-  
-  return <OutputPage
-    sequence={sequence}
-    pdb={pdb}
-    onPredict={handlePredict}
-  />;
+
+  return (
+    <OutputPage
+      sequence={sequence}
+      pdb={pdb}
+      onPredict={handlePredict}
+    />
+  );
 }
 
-// vibed
+// ====== viewer ======
+
 function ProteinViewer({ pdbString }) {
   const viewerRef = useRef(null);
 
   useEffect(() => {
-    // safety: if no dom node or 3Dmol not loaded
+    console.log('ProteinViewer effect: pdb length =', pdbString?.length);
+
     if (!viewerRef.current || !window.$3Dmol || !pdbString) return;
 
     const element = viewerRef.current;
-
-    // clear any previous viewer content
     element.innerHTML = '';
 
     const config = { backgroundColor: 'white' };
@@ -104,10 +102,6 @@ function ProteinViewer({ pdbString }) {
     viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
     viewer.zoomTo();
     viewer.render();
-
-    // optional: small zoom animation
-    // viewer.zoom(1.1, 500);
-
   }, [pdbString]);
 
   return (
@@ -118,12 +112,15 @@ function ProteinViewer({ pdbString }) {
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
+        border: '1px solid #ccc', // just so you can see the box
       }}
     />
   );
 }
 
-function InputPage({sequence, onAminoClick}) {
+// ====== pages ======
+
+function InputPage({ sequence, onAminoClick }) {
   const aminoAcidsButtons = useMemo(() => {
     return Array.from(AMINO_ACIDS.keys()).map(aminoName => (
       <button
@@ -150,23 +147,26 @@ function InputPage({sequence, onAminoClick}) {
 
 function OutputPage({ sequence, pdb, onPredict }) {
   useEffect(() => {
+    console.log('OutputPage mounted, calling onPredict');
     onPredict();
   }, [onPredict]);
+
+  console.log('OutputPage render: pdb length =', pdb ? pdb.length : 0);
 
   return (
     <div className='full-page' id='top-down-page'>
       <div className='container-center-fill' id='sequence'>
-        {readAminoSequence(sequence)}
+        {readAminoSequence(sequence) || '(no sequence yet)'}
       </div>
-      <div className='container-center-fill' id='view'>
+      <div className='container-center-fill' id='view' style={{ height: '70%' }}>
         {pdb ? (
           <ProteinViewer pdbString={pdb} />
         ) : (
-          <div className='container-center-fill'>Waiting for prediction…</div>
+          <div>Waiting for prediction…</div>
         )}
       </div>
     </div>
   );
 }
 
-export default App
+export default App;
