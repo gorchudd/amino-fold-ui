@@ -11,6 +11,7 @@ html, body {
 .full-page {
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 #top-down-page {
@@ -19,13 +20,14 @@ html, body {
 }
 
 #top-down-page #top {
-  flex: 1;
+  flex: 1 1 auto;
   flex-wrap: wrap;
   font-size: 25px;
-  overflow: auto;
+  overflow-y: auto;
 }
 
 #top-down-page #down {
+  flex: 0 0 auto;
   flex-shrink: 0;
   flex-wrap: wrap;
 }
