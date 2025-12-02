@@ -89,14 +89,21 @@ function ProteinViewer({ pdbString }) {
 
   useEffect(() => {
     console.log('ProteinViewer effect: pdb length =', pdbString?.length);
+    console.log('ProteinViewer: has $3Dmol =', !!window.$3Dmol);
 
-    if (!viewerRef.current || !window.$3Dmol || !pdbString) return;
+    if (!viewerRef.current) return;
+    if (!window.$3Dmol) {
+      console.error('3Dmol.js is not loaded!');
+      return;
+    }
+    if (!pdbString) return;
 
     const element = viewerRef.current;
     element.innerHTML = '';
 
-    const config = { backgroundColor: 'white' };
-    const viewer = window.$3Dmol.createViewer(element, config);
+    const viewer = window.$3Dmol.createViewer(element, {
+      backgroundColor: 'black', // change to black so you SEE the cartoon
+    });
 
     viewer.addModel(pdbString, 'pdb');
     viewer.setStyle({}, { cartoon: { color: 'spectrum' } });
@@ -112,11 +119,12 @@ function ProteinViewer({ pdbString }) {
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
-        border: '1px solid #ccc', // just so you can see the box
+        border: '1px solid #ccc',
       }}
     />
   );
 }
+
 
 // ====== pages ======
 
