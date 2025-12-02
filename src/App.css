@@ -36,6 +36,11 @@ html, body, #root{
   padding: 25px
 }
 
+#top-down-page #view {
+  height: 75%;
+  min-height: 0;
+}
+
 .container-center-fill {
   display: flex;
   justify-content: center;
